@@ -44,7 +44,7 @@ $log = $viewModel->getLog();
     <p><b><?= $escaper->escapeHtml(__('response_body:')) ?></b></p>
     <pre style="border:1px solid #CCC;height:300px;overflow-y:auto;padding:10px;font-size:12px"><?= $log->getData('response_body') ?></pre>
 <?php else: ?>
-    <p><b><?= $escaper->escapeHtml(__('response_body:')) ?></b> <button class="js_beauty_json">Prettify JSON')) ?></button></p>
+    <p><b><?= $escaper->escapeHtml(__('response_body:')) ?></b> <button class="js_beauty_json"><?= $escaper->escapeHtml(__('Prettify JSON')) ?></button></p>
     <p><?= $escaper->escapeHtml($log->getData('response_body')) ?></p>
 <?php endif; ?>
 <br/>
