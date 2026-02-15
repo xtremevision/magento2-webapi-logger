@@ -34,6 +34,10 @@ class Actions extends Column
                     'href' => $this->urlBuilder->getUrl('webapi_logs/reports/detail', ['log_id' => $item['log_id']]),
                     'label' => new Phrase('View')
                 ];
+                $item[$this->getData('name')]['download'] = [
+                    'href' => $this->urlBuilder->getUrl('webapi_logs/reports/download', ['log_id' => $item['log_id']]),
+                    'label' => new Phrase('Download')
+                ];
             }
         }
 

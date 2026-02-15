@@ -29,7 +29,13 @@ $log = $viewModel->getLog();
     <p><b><?= $escaper->escapeHtml(__('request_body:')) ?></b></p>
     <pre style="border:1px solid #CCC;height:300px;overflow-y:auto;padding:10px;font-size:12px"><?= $escaper->escapeHtml($log->getData('request_body')) ?></pre>
 <?php else: ?>
-    <p><b><?= $escaper->escapeHtml(__('request_body:')) ?></b> <button class="js_beauty_json"><?= $escaper->escapeHtml(__('Prettify JSON')) ?></button></p>
+    <p>
+        <b><?= $escaper->escapeHtml(__('request_body:')) ?></b>
+        <button class="js_beauty_json"><?= $escaper->escapeHtml(__('Prettify JSON')) ?></button>
+        <a class="action-default" href="<?= $escaper->escapeUrl($block->getUrl('webapi_logs/reports/download', ['log_id' => $log->getData('log_id')])) ?>">
+            <?= $escaper->escapeHtml(__('Download')) ?>
+        </a>
+    </p>
     <p><?= $escaper->escapeHtml($log->getData('request_body')) ?></p>
 <?php endif; ?>
 <br/>
@@ -44,7 +50,7 @@ $log = $viewModel->getLog();
     <p><b><?= $escaper->escapeHtml(__('response_body:')) ?></b></p>
     <pre style="border:1px solid #CCC;height:300px;overflow-y:auto;padding:10px;font-size:12px"><?= $log->getData('response_body') ?></pre>
 <?php else: ?>
-    <p><b><?= $escaper->escapeHtml(__('response_body:')) ?></b> <button class="js_beauty_json">Prettify JSON')) ?></button></p>
+    <p><b><?= $escaper->escapeHtml(__('response_body:')) ?></b> <button class="js_beauty_json"><?= $escaper->escapeHtml(__('Prettify JSON')) ?></button></p>
     <p><?= $escaper->escapeHtml($log->getData('response_body')) ?></p>
 <?php endif; ?>
 <br/>
