@@ -12,6 +12,10 @@ declare(strict_types=1);
 
 $viewModel = $block->getData('viewModel');
 $log = $viewModel->getLog();
+$requestBody = $viewModel->getRequestBody();
+$isRequestBodyStoredOnDisk = $viewModel->isRequestBodyStoredOnDisk();
+$isRequestBodyTooLarge = strlen($requestBody) > 2 * 1024 * 1024;
+$requestBodyDownloadUrl = $block->getUrl('webapi_logs/reports/download', ['log_id' => $log->getData('log_id')]);
 ?>
 <h1><?= $escaper->escapeHtml(__('Log id: %1', $log->getData('log_id'))) ?></h1>
 <br/>
@@ -31,7 +35,10 @@ $log = $viewModel->getLog();
 <?php else: ?>
     <p>
         <b><?= $escaper->escapeHtml(__('request_body:')) ?></b>
-        <button class="js_beauty_json"><?= $escaper->escapeHtml(__('Prettify JSON')) ?></button>
+        <button
+            class="js_beauty_json"
+            <?= $isRequestBodyStoredOnDisk ? ' disabled="disabled" title="' . $escaper->escapeHtmlAttr((string)__('Stored on disk. Use Download instead.')) . '"' : '' ?>
+        ><?= $escaper->escapeHtml(__('Prettify JSON')) ?></button>
         <a class="action-default" href="<?= $escaper->escapeUrl($block->getUrl('webapi_logs/reports/download', ['log_id' => $log->getData('log_id')])) ?>">
             <?= $escaper->escapeHtml(__('Download')) ?>
         </a>

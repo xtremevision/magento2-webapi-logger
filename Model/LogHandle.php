@@ -9,7 +9,10 @@ declare(strict_types=1);
 namespace Opengento\WebapiLogger\Model;
 
 use Exception;
+use Opengento\WebapiLogger\Model\Config\SaveMode;
 use Psr\Log\LoggerInterface;
+
+use function in_array;
 
 class LogHandle
 {
@@ -20,6 +23,7 @@ class LogHandle
         private SecretParser $secretParser,
         private Config $config,
         private LoggerManager $loggerManager,
+        private RequestBodyStorage $requestBodyStorage,
         private LoggerInterface $logger
     ) {}
 
@@ -37,6 +41,10 @@ class LogHandle
                 $requestHeaders = $this->secretParser->parseHeaders($requestHeaders);
                 $requestBody = $this->secretParser->parseBody($requestBody);
             }
+            $requestStored = $this->getRequestStoredMode();
+            if ($requestStored === 'disk') {
+                $requestBody = $this->requestBodyStorage->store($requestBody);
+            }
 
             $log = $this->logFactory->create();
             $log->setData([
@@ -46,6 +54,7 @@ class LogHandle
                 'request_url' => $requestPath,
                 'request_headers' => $requestHeaders,
                 'request_body' => $requestBody,
+                'request_stored' => $requestStored,
                 'request_datetime' => $requestDateTime
             ]);
             $this->loggerManager->log($log);
@@ -78,5 +87,22 @@ class LogHandle
                 $this->logger->error('Cant complete webapi log save because of error: ' . $exception->getMessage());
             }
         }
+    }
+
+    private function getRequestStoredMode(): string
+    {
+        $saveModes = $this->config->getSaveModes();
+
+        if (in_array(SaveMode::Disk, $saveModes, true)) {
+            return 'disk';
+        }
+        if (in_array(SaveMode::DataBase, $saveModes, true)) {
+            return 'db';
+        }
+        if (in_array(SaveMode::Psr, $saveModes, true)) {
+            return 'psr';
+        }
+
+        return 'db';
     }
 }

@@ -16,14 +16,17 @@ enum SaveMode: string
 {
     private const PSR = 'psr';
     private const DATABASE = 'database';
+    private const DISK = 'disk';
 
     private const LABELS = [
         self::PSR => 'PSR Logger',
-        self::DATABASE => 'Database'
+        self::DATABASE => 'Database',
+        self::DISK => 'Disk (/var)'
     ];
 
     case Psr = self::PSR;
     case DataBase = self::DATABASE;
+    case Disk = self::DISK;
 
     public function getLabel(): Phrase
     {
