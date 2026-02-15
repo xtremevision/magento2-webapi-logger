@@ -43,7 +43,13 @@ class LogHandle
             }
             $requestStored = $this->getRequestStoredMode();
             if ($requestStored === 'disk') {
-                $requestBody = $this->requestBodyStorage->store($requestBody);
+                $storedRequestBody = $this->requestBodyStorage->store($requestBody);
+                if ($this->requestBodyStorage->isDiskReference($storedRequestBody)) {
+                    $requestBody = $storedRequestBody;
+                } else {
+                    $requestBody = $storedRequestBody;
+                    $requestStored = 'db';
+                }
             }
 
             $log = $this->logFactory->create();
