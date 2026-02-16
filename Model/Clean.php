@@ -27,11 +27,11 @@ class Clean
         $connection = $this->logResourceModel->getConnection();
         $tableName = $this->logResourceModel->getMainTable();
 
-        $requestBodies = $connection->fetchCol(
+        $statement = $connection->query(
             $connection->select()->from($tableName, ['request_body'])
         );
-        foreach ($requestBodies as $requestBody) {
-            $this->requestBodyStorage->delete((string)$requestBody);
+        while (($row = $statement->fetch()) !== false) {
+            $this->requestBodyStorage->delete((string)($row['request_body'] ?? ''));
         }
 
         $connection->truncateTable($tableName);
