@@ -33,7 +33,7 @@ class LoggerManager
         if (in_array(SaveMode::Psr, $saveModes, true)) {
             $this->savePsr($log);
         }
-        if (in_array(SaveMode::DataBase, $saveModes, true) || in_array(SaveMode::Disk, $saveModes, true)) {
+        if (SaveMode::shouldPersistToDb($saveModes)) {
             $this->saveDb($log);
         }
     }

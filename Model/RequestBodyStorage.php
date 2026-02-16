@@ -90,6 +90,27 @@ class RequestBodyStorage
         return str_starts_with($value, self::STORAGE_PREFIX);
     }
 
+    public function delete(string $value): void
+    {
+        if (!$this->isDiskReference($value)) {
+            return;
+        }
+
+        $relativePath = $this->getRelativePathFromReference($value);
+        if ($relativePath === null) {
+            return;
+        }
+
+        try {
+            $directory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
+            if ($directory->isExist($relativePath)) {
+                $directory->delete($relativePath);
+            }
+        } catch (Exception $exception) {
+            $this->logger->error('Could not delete request body from disk: ' . $exception->getMessage());
+        }
+    }
+
     private function getRelativePathFromReference(string $value): ?string
     {
         if (!$this->isDiskReference($value)) {

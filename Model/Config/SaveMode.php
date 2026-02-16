@@ -33,6 +33,22 @@ enum SaveMode: string
         return new Phrase(self::LABELS[$this->value] ?? $this->name);
     }
 
+    public function requiresDbRow(): bool
+    {
+        return $this === self::DataBase || $this === self::Disk;
+    }
+
+    public static function shouldPersistToDb(array $saveModes): bool
+    {
+        foreach ($saveModes as $saveMode) {
+            if ($saveMode instanceof self && $saveMode->requiresDbRow()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static function toOptionArray(): array
     {
         return array_map(

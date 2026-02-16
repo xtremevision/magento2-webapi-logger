@@ -102,16 +102,11 @@ class LogHandle
     {
         $saveModes = $this->config->getSaveModes();
 
-        if (in_array(SaveMode::Disk, $saveModes, true)) {
-            return 'disk';
-        }
-        if (in_array(SaveMode::DataBase, $saveModes, true)) {
-            return 'db';
-        }
-        if (in_array(SaveMode::Psr, $saveModes, true)) {
-            return 'psr';
-        }
-
-        return 'db';
+        return match(true) {
+            in_array(SaveMode::Disk, $saveModes, true) => 'disk',
+            in_array(SaveMode::DataBase, $saveModes, true) => 'db',
+            in_array(SaveMode::Psr, $saveModes, true) => 'psr',
+            default => 'db',
+        };
     }
 }
