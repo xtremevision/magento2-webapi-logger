@@ -13,6 +13,7 @@ use Opengento\WebapiLogger\Model\Config\SaveMode;
 use Psr\Log\LoggerInterface;
 
 use function in_array;
+use function strlen;
 
 class LogHandle
 {
@@ -41,6 +42,7 @@ class LogHandle
                 $requestHeaders = $this->secretParser->parseHeaders($requestHeaders);
                 $requestBody = $this->secretParser->parseBody($requestBody);
             }
+            $requestSize = strlen($requestBody);
             $requestStored = $this->getRequestStoredMode();
             if ($requestStored === 'disk') {
                 $storedRequestBody = $this->requestBodyStorage->store($requestBody);
@@ -60,6 +62,7 @@ class LogHandle
                 'request_url' => $requestPath,
                 'request_headers' => $requestHeaders,
                 'request_body' => $requestBody,
+                'request_size' => $requestSize,
                 'request_stored' => $requestStored,
                 'request_datetime' => $requestDateTime
             ]);
